@@ -63,7 +63,7 @@ $this->load->view('layouts/navigation2');
             </div>
             <hr>
             <div class="row">
-              <div class="col-md-2">Tanggal</div><div class="col-md-3">: <input type="hidden" name="reservation_date" value="<?php echo date('Y-m-d') ?>"><?php echo date('Y-m-d') ?></div>
+              <div class="col-md-2">Tanggal</div><div class="col-md-3">: <input type="hidden" name="reservation_date" value="<?php echo $this->input->post('tanggalstrip') ?>"><?php echo $this->input->post('tanggalstrip') ?></div>
             </div>
             <div class="row">
               <div class="col-md-2">Keberangkatan</div><div class="col-md-3">: <input type="hidden" name="depart_at" value="<?php echo $this->input->post('twaktu') ?>"><?php echo $this->input->post('twaktu') ?></div>
@@ -83,6 +83,68 @@ $this->load->view('layouts/navigation2');
     <input type="hidden" name="gander[]" value="<?php echo $this->input->post('gander['.$i.']') ?>">
 
                             <?php } ?>
+
+                            <?php
+                            $jadi = $this->input->post('tdewasa') + $this->input->post('tanak');; 
+                                  for ($i=$this->input->post('tdewasa'); $i < $jadi; $i++) {
+                             ?>
+                        <div class="col-md-12">
+                                <div class="m-portlet m-portlet--mobile ">
+                                    <div class="m-portlet__head">
+                                        <div class="m-portlet__head-caption">
+                                            <div class="m-portlet__head-title">
+                                                <h3 class="m-portlet__head-text">
+                                                    #Tiket Bayi <?php echo $i+1 ?> | Tiketu   
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="m-portlet__head-tools">
+                                            <ul class="m-portlet__nav">
+                                                <li class="m-portlet__nav-item">
+                                                    <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" data-dropdown-toggle="hover" aria-expanded="true">
+                                                        <h3 class="m-portlet__head-text">
+                                                            <input type="hidden" name="kodetiket[]" value="<?php echo $koderes.$this->input->post('seat_code['.$i.']')."K" ?>">[<?php echo $koderes.$this->input->post('seat_code['.$i.']')."K" ?>]
+                                                        </h3>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                <div class="m-portlet__body">
+                                          <div class="row">
+                                            
+              <div class="col-md-4">
+                <h4><?php echo $this->input->post('tnama') ?></h4> <input type="hidden" name="ruteid" value="<?php echo $this->input->post('idrute') ?>">
+                </div>
+              <div class="col-md-5"></div>
+              <div class="col-md-3"></div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">Nomor Kursi :<input type="hidden" name="seat_code[]" value="<?php echo $this->input->post('seat_code['.$i.']') ?>"> <?php echo $this->input->post('seat_code['.$i.']') ?></div>
+            </div><br>
+            <div class="row">
+              <div class="col-md-2"><b>Atas Nama</b></div><div class="col-md-3">: <?php echo $this->input->post('name['.$i.']') ?></div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-2">Tanggal</div><div class="col-md-3">: <input type="hidden" name="reservation_date" value="<?php echo $this->input->post('tanggalstrip') ?>"><?php echo $this->input->post('tanggalstrip') ?></div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">Keberangkatan</div><div class="col-md-3">: <input type="hidden" name="depart_at" value="<?php echo $this->input->post('twaktu') ?>"><?php echo $this->input->post('twaktu') ?></div>
+            </div>    
+  <input type="hidden" name="price" value="0" class="idrtotalj">
+                                </div>
+                            </div>
+                        </div>
+
+    <input type="hidden" name="name[]" value="<?php echo $this->input->post('name['.$i.']') ?>">
+    <input type="hidden" name="address[]" value="<?php echo $this->input->post('address[0]') ?>">
+    <input type="hidden" name="phone[]" value="<?php echo $this->input->post('phone[0]') ?>">
+    <input type="hidden" name="gander[]" value="<?php echo $this->input->post('gander['.$i.']') ?>">
+
+                            <?php } ?>
+
                             <!-- END EXAMPLE TABLE PORTLET-->
                     </div>
 
@@ -119,23 +181,18 @@ $('#btnsimpan').click(function(e){
   var url = $('#fcheckout').attr('action');
   var data = $('#fcheckout').serializeArray();
   $.post(url,data,function(){
+          $.print(".printini");
     swal({
         title: "Berhasil!",
-        text: "Print faktur pembayaran ?",
+        text: "Pemesanan Tiket Berhasil",
         type: "success",
-        showCancelButton: true,
+        showCancelButton: false,
         confirmButtonColor: "#f8b32d",
-        confirmButtonText: "Ya",
-        cancelButtonText: "Tidak",
+        confirmButtonText: "Selesai",
         closeOnConfirm: false,
         closeOnCancel: false
-    }, function(isConfirm){
-        if (isConfirm) {
-          $.print(".printini");
-        } else {
-            url : "<?php echo site_url('tiket/kereta')?>/",
-            window.location.href = url
-        }
+    },function(){
+      location.href='<?php echo site_url('tiket/selesai') ?>';
     });
   });
 });

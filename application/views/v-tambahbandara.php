@@ -10,7 +10,7 @@ $this->load->view('layouts/navigation2');
                         <div class="d-flex align-items-center">
                             <div class="mr-auto">
                                 <h3 class="m-subheader__title m-subheader__title--separator">
-                                    Registrasi Rute Kereta
+                                    Registrasi bandara
                                 </h3>
                                 <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
                                     <li class="m-nav__item m-nav__item--home">
@@ -67,11 +67,9 @@ $this->load->view('layouts/navigation2');
                                         </div>
                                     </div>
                                 <div class="m-portlet__body">
-                                  <?php
-                                              $this->load->view('form/frute');
-                                             ?>
-                                             <center> <input type="submit" id="btnsimpan" class="btn btn-success" value="Simpan"> <buttom class="btn btn-danger btnbatal">Batal</buttom></center>
-                                           </form>
+                                    <?php $this->load->view('form/fbandara') ?>
+                                    <center> <input type="submit" id="btnsimpan" class="btn btn-success" value="Simpan"> <buttom class="btn btn-danger btnbatal">Batal</buttom></center>
+                               </form>
                                 </div>
                             </div>
                             <!-- END EXAMPLE TABLE PORTLET-->
@@ -80,48 +78,25 @@ $this->load->view('layouts/navigation2');
 
                 </div>
             </div>
+
 <?php
   $this->load->view('layouts/footer');
  ?>
 
 
+ <script type="text/javascript">
 
-<script type="text/javascript">
-
-$('[name="depart_at"]').blur(function(){
-    if ($('[name="estp"]').val() == '') {
-
-    }else{
-        if (this.value >= $('[name="estp"]').val()) {
-            swal('Peringatan','Waktu Pemberangkatan Tidak Boleh Lebih Atau Sama Dari Waktu Sampai!','warning');
-            $('[name="depart_at"]').val('');
-        }
-    }
+$('[name="abbr"]').on('keyup',function(){
+    var a = $(this).val().toUpperCase();
+    $('[name="id"]').val('BD'+a);
 });
 
-$('[name="estp"]').blur(function(){
-    if ($('[name="depart_at"]').val() == '') {
-
-    }else{
-        if (this.value <= $('[name="depart_at"]').val()) {
-            swal('Peringatan','Waktu Sampai Tidak Boleh Kurang Atau Sama Dari Waktu Pemberangkatan!','warning');
-            $('[name="estp"]').val('');
-        }
-    }
-});
 
 $('#btnsimpan').click(function(e){
   e.preventDefault();
-
-  if ($('[name="rute_from"]').val() == $('[name="rute_to"]').val()) {
-    swal('Peringatan!','Kedua Rute Tidak Boleh Sama Satu Sama Lain!','warning');
-    return false;
-  }else if ($('[name="rute_from"]').val() == '' || $('[name="rute_to"]').val() == '' || $('[name="price"]').val() == '' ){
-    swal('Peringatan!','Data Belum Lengkap!','warning');
-    return false;
-  }else{
-      var url = $('#frute').attr('action');
-      var data = $('#frute').serializeArray();
+  if ($('[name="abbr"]').val().length == 3) {
+      var url = $('#fbandara').attr('action');
+      var data = $('#fbandara').serializeArray();
       $.post(url,data,function(){
         swal({
             title: "Berhasil!",
@@ -135,23 +110,17 @@ $('#btnsimpan').click(function(e){
             closeOnCancel: false
         }, function(isConfirm){
             if (isConfirm) {
-              $('#frute')[0].reset();
+              $('#fbandara')[0].reset();
               swal.close();
             } else {
-                url : "<?php echo site_url('rute')?>/",
+                url : "<?php echo site_url('bandara')?>/",
                 window.location.href = url
             }
         });
       });
-    
+  }else{
+    swal("Peringatan","Singkatan Harus Memuat 3 Karakter!");
   }
-  
-
-
-
 });
-
-    $('.select-beast').select2();
-
 
 </script>

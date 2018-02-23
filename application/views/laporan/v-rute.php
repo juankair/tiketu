@@ -53,6 +53,7 @@ $this->load->view('layouts/navigation2');
 
 var table;
 
+
 table = $('#tablelistrute').DataTable({
   dom: 'Bfrtip',
   buttons: [

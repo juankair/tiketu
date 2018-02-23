@@ -14,7 +14,40 @@ $this->load->view('layouts/navigation2');
             </h2>
           </div>
           <div class="m-content">
-            
+            <div class="buttonset" style="margin-bottom: 10px">
+              <button class="btn btn-primary" onclick="keseluruhan()">Keseluruhan</button>
+              <button class="btn btn-primary" onclick="showpesawat()">Pesawat</button>
+              <button class="btn btn-primary" onclick="showkereta()">Kereta Api</button>
+              <div class="pull-right">
+                <select class="form-control" id="setthn">
+                  <?php 
+                  $p = date('Y') - 3;
+                  $s = date('Y') + 6;
+                  for ($i=$p; $i < $s ; $i++) { 
+                    ?>
+                    <option value="<?php echo $i ?>"><?php echo $i ?></option>
+                    <?php
+                  }
+                   ?>
+                </select>
+              </div>
+              <div class="pull-right">
+                <select class="form-control" id="setbln">
+                  <option value="-01-">Januari</option>
+                  <option value="-02-">Februari</option>
+                  <option value="-03-">Maret</option>
+                  <option value="-04-">April</option>
+                  <option value="-05-">Mei</option>
+                  <option value="-06-">Juni</option>
+                  <option value="-07-">Juli</option>
+                  <option value="-08-">Agustus</option>
+                  <option value="-09-">September</option>
+                  <option value="-10-">Oktober</option>
+                  <option value="-11-">November</option>
+                  <option value="-12-">Desember</option>
+                </select>
+              </div>
+            </div>
                                 <div class="m-portlet m-portlet--mobile ">
                                 <div class="m-portlet__body">
                                    <div class="row m-row--no-padding m-row--col-separator-xl">
@@ -46,7 +79,7 @@ $this->load->view('layouts/navigation2');
                 <table class="table table-bordered table-stripped" id="tpemberangkatan">
                   <thead>
                     <tr>
-                      <th>No</th>
+                      <th style="display: none;">No</th>
                       <th>Dari</th>
                       <th>Nama</th>
                       <th>Ke</th>
@@ -54,6 +87,8 @@ $this->load->view('layouts/navigation2');
                       <th>Harga</th>
                       <th>Kursi</th>
                       <th>Dipesan</th>
+                      <th style="display: none;">Type</th>
+                      <th style="display: none;">Date</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -63,14 +98,16 @@ $this->load->view('layouts/navigation2');
                     foreach ($datajadi as $dj) {
                       ?>
                       <tr>
-                        <td><?php echo $i+1 ?></td>
+                        <td style="display: none;"><?php echo $i+1 ?></td>
                         <td><?php echo $dj[$i][0] ?></td>
                         <td><?php echo $dj[$i][1] ?></td>
                         <td><?php echo $dj[$i][2] ?></td>
-                        <td><?php echo $dj[$i][3] ?></td>
+                        <td><?php echo $dj[$i][3] ?> - <?php echo $dj[$i][9] ?></td>
                         <td><?php echo $dj[$i][4] ?></td>
                         <td><?php echo $dj[$i][5] ?></td>
                         <td><?php echo $dj[$i][6] ?></td>
+                        <td style="display: none;"><?php echo $dj[$i][7] ?></td>
+                        <td style="display: none;"><?php echo $dj[$i][8] ?></td>
                       </tr>
                       <?php
                     }
@@ -126,30 +163,28 @@ $('#kisitotal').text(table.columns( 7 ).data().sum());
 $('#jmlpenjualan').text(table.rows().count());
 
 function keseluruhan(){  
-  $('#tpemberangkatan').dataTable().fnFilter('',7);
+  $('#tpemberangkatan').dataTable().fnFilter('',8);
 
   $('#isitotal').text(accounting.formatMoney(table.columns(5,{filter:'applied'}).data().sum()));
 }
 function showpesawat(){
-  $('#tpemberangkatan').dataTable().fnFilter('1',7);
+  $('#tpemberangkatan').dataTable().fnFilter('1',8);
 
   $('#isitotal').text(accounting.formatMoney(table.columns(5,{filter:'applied'}).data().sum()));
 }
 function showkereta(){
-    $('#tpemberangkatan').dataTable().fnFilter('2',7);
+    $('#tpemberangkatan').dataTable().fnFilter('2',8);
 
   $('#isitotal').text(accounting.formatMoney(table.columns(5,{filter:'applied'}).data().sum()));
 }
 
 $('#setthn').on('change',function(){
-  $('#tpemberangkatan').dataTable().fnFilter(this.value,1);
+  $('#tpemberangkatan').dataTable().fnFilter(this.value,9);
 
-  $('#isitotal').text(accounting.formatMoney(table.columns(5,{filter:'applied'}).data().sum()));
 });
 
 $('#setbln').on('change',function(){
-  $('#tpemberangkatan').dataTable().fnFilter(this.value,1);
+  $('#tpemberangkatan').dataTable().fnFilter(this.value,9);
 
-  $('#isitotal').text(accounting.formatMoney(table.columns(5,{filter:'applied'}).data().sum()));
 });
 </script>

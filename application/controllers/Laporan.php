@@ -172,8 +172,13 @@ public function list_penumpang(){
     foreach ($listpendapatan as $r) {
     $roow = array();
       $roow[] = $r->reservation_date;
-      $roow[] = $this->ubahfrom($r->rute_from);
-      $roow[] = $this->ubahto($r->rute_to);
+      if ($r->transportation_typeid == "1") {
+        $roow[] = $this->ubahfromb($r->rute_from);
+        $roow[] = $this->ubahtob($r->rute_to);
+      }else{
+        $roow[] = $this->ubahfrom($r->rute_from);
+        $roow[] = $this->ubahto($r->rute_to);
+      }
       $roow[] = $r->name;
       $roow[] = $r->description;
       $roow[] = $r->price;
@@ -199,13 +204,24 @@ public function list_penumpang(){
     $datana = array();
     foreach ($listpemberangkatan as $r) {
     $roow = array();
-      $roow[] = $this->ubahfrom($r->rute_from);
+      if ($r->transportation_typeid == "1") {
+        $roow[] = $this->ubahfromb($r->rute_from);
+      }else{
+        $roow[] = $this->ubahfrom($r->rute_from);
+      }
       $roow[] = $r->description;
-      $roow[] = $this->ubahto($r->rute_to);
+      if ($r->transportation_typeid == "1") {
+        $roow[] = $this->ubahfromb($r->rute_to);
+      }else{
+        $roow[] = $this->ubahfrom($r->rute_to);
+      }
       $roow[] = $r->depart_at;
       $roow[] = $r->price;
       $roow[] = $r->seat_qty;
       $roow[] = $r->reserved;
+      $roow[] = $r->transportation_typeid;
+      $roow[] = $r->reservation_date;
+      $roow[] = $r->estp;
 
       $datana[] = $roow;
     }
@@ -268,6 +284,22 @@ public function list_penumpang(){
       $time = date('H:i', strtotime('+'.$a.' hour'));
       echo $time;
     }
+
+    function ubahfromb($idfrom){
+      $a = $this->M_Rute->getfromb($idfrom)->result();
+
+      foreach ($a as $k) {
+        return $k->nama."(".$k->abbr.") ".$k->city;
+      }
+    }
+    function ubahtob($idto){
+      $a = $this->M_Rute->gettob($idto)->result();
+
+      foreach ($a as $k) {
+        return $k->nama."(".$k->abbr.") ".$k->city;
+      }
+    }
+
 
 }
  ?>

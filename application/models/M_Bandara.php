@@ -1,9 +1,9 @@
 <?php
-class M_Rute extends CI_Model{
+class M_bandara extends CI_Model{
 
-  var $table = 't_rute';
-  var $column_order = array('id','depart_at','rute_from','rute_to','price','transportationid','estp'); //set column field database for datatable orderable
-  var $column_search = array('id','depart_at','rute_from','rute_to','price','transportationid','estp'); //set column field database for datatable searchable just firstname , lastname , address are searchable
+  var $table = 't_bandara';
+  var $column_order = array('id','nama','city','abbr'); //set column field database for datatable orderable
+  var $column_search = array('id','nama','city','abbr'); //set column field database for datatable searchable just firstname , lastname , address are searchable
   var $order = array('id' => 'asc'); // default order
 
   public function __construct()
@@ -15,7 +15,7 @@ class M_Rute extends CI_Model{
   private function _get_datatables_query()
   {
 
-    $this->db->from('v_getnmt');
+    $this->db->from($this->table);
 
     $i = 0;
 
@@ -51,12 +51,11 @@ class M_Rute extends CI_Model{
     }
   }
 
-  function get_datatables($w)
+  function get_datatables()
   {
     $this->_get_datatables_query();
     if($_POST['length'] != -1)
     $this->db->limit($_POST['length'], $_POST['start']);
-    $this->db->where('transportation_typeid',$w);
     $query = $this->db->get();
     return $query->result();
   }
@@ -102,43 +101,28 @@ class M_Rute extends CI_Model{
   }
 
   function simpan(){
-    $data = array('id' => $this->input->post('id'),
-                  'depart_at' => $this->input->post('depart_at'),
-                  'rute_from' => $this->input->post('rute_from'),
-                  'rute_to' => $this->input->post('rute_to'),
-                  'price' => $this->input->post('price'),
-                  'transportationid' => $this->input->post('transportationid'),
-                  'estp' => $this->input->post('estp'),
-                  'idstasiun' => $this->input->post('rute_from'),
+    $data = array('id' => $this->geturut($this->input->post('id')),
+                  'nama' => $this->input->post('nama'),
+                  'city' => $this->input->post('city'),
+                  'abbr' => $this->input->post('abbr')
                   );
     $this->db->insert($this->table,$data);
   }
 
-  function gettrans($w){
-    $this->db->where('transportation_typeid',$w);
-    return $this->db->get('t_transportation');
-  }
-  function get_stasiun(){
-    return $this->db->get('t_stasiun');
-  }
-  function get_bandara(){
-    return $this->db->get('t_bandara');
+public function geturut($kd)
+  {
+    $query = $this->db->query(
+    "SELECT IFNULL(MAX(SUBSTRING(id,6,3)),0)+1 AS no_urut FROM t_bandara
+    WHERE SUBSTRING(id,1,5) = '".$kd."'");
+
+    $data = $query->row_array();
+
+    $no_urut = sprintf("%'.03d",$data['no_urut']);
+
+    $kd = $kd.$no_urut;
+    return $kd;
   }
 
-  function getfrom($idfrom){
-    return $this->db->query("SELECT * from t_stasiun where id= '".$idfrom."' ");
-  }
-   function getto($idto){
-    return $this->db->query("SELECT * from t_stasiun where id='".$idto."' ");
-  }
-
-  function getfromb($idfrom){
-    return $this->db->query("SELECT * from t_bandara where id= '".$idfrom."' ");
-  }
-   function gettob($idto){
-    return $this->db->query("SELECT * from t_bandara where id='".$idto."' ");
-  }
 
 }
-
  ?>

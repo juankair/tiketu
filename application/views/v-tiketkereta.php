@@ -155,7 +155,7 @@
                             </div>
                           <div class="col-md-3">
                               <div class="form-group">
-                                <label class="control-label mb-2">Anak < 3thn</label>
+                                <label class="control-label mb-2">Bayi < 3thn</label>
                                   <select class="form-control" id="canak" name="anak">
                                     <option value="0">0</option>
                                     <option value="1">1</option>
@@ -164,13 +164,20 @@
                             </div>
 
                           </div>
-
+  
                           <div class="row">
                             <div class="col-md-6"><h6><span id="rnama"></span></h6><br></div>
+                          
+                            <div class="col-md-6">
+                              <label class="control-label">Tanggal Pemberangkatan</label>
+                              <input name="tglpesan" readonly class="form-control" value="<?php echo date('m/d/Y') ?>" type="text">
+                            </div>
                           </div>
                           <div class="row">
-  Jam Sampai : &nbsp;<span id="restp"></span>
-</div>
+                            <div class="col-md-6">
+                              Jam Sampai : &nbsp;<span id="restp"></span>
+                            </div>
+                          </div>
                         </div>
 
 <input type="hidden" name="idrute" class="rrute" value="">
@@ -197,11 +204,10 @@
   'use strict';
   var table;
 
-  $('#tablepesawat').dataTable({
+  $('#tablekereta').dataTable({
     searching:true,
     bLengthChange : false
   });
-
 
 
 
@@ -213,6 +219,7 @@ function makedtgreatagain(){
   $('#tablekereta.no-footer').css('border-bottom','none');
 
 }
+makedtgreatagain();
 
     $('[name="from"]').on( 'change', function () {
       $('#tablepesawat').dataTable().fnFilter(this.value,3);
@@ -273,5 +280,7 @@ function makedtgreatagain(){
     $('.select-beast').selectize({
     sortField: 'text'
     })
+
+    $('[name="tglpesan"]').datepicker();
 
 </script>

@@ -96,7 +96,7 @@ $this->load->view('layouts/navigation2');
                 <table class="table table-bordered table-stripped" id="tpendapatan">
                   <thead>
                     <tr>
-                      <th>No</th>
+                      <th style="display: none;">No</th>
                       <th>Tanggal</th>
                       <th>Dari</th>
                       <th>Ke</th>
@@ -112,7 +112,7 @@ $this->load->view('layouts/navigation2');
                     foreach ($datajadi as $dj) {
                       ?>
                       <tr>
-                        <td><?php echo $i+1 ?></td>
+                        <td style="display: none;"></td>
                         <td><?php echo $dj[$i][0] ?></td>
                         <td><?php echo $dj[$i][1] ?></td>
                         <td><?php echo $dj[$i][2] ?></td>

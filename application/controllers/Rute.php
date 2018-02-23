@@ -5,17 +5,32 @@ class Rute extends CI_Controller{
     $this->load->model('M_Rute');
   }
   function index(){
-    $data['judul'] = "Rute";
+    redirect('rute/pesawat');
+  }
+
+  function pesawat(){
+    $data['judul'] = "Rute Pesawat";
     $data['aktif'] = "";
     $data['aktiftik'] ="";
     $data['aktiflap'] = "";
-    $data['transportation'] = $this->M_Rute->gettrans()->result();
-    $data['stasiun'] = $this->M_Rute->get_stasiun()->result();
+    $data['transportation'] = $this->M_Rute->gettrans('1')->result();
+    $data['bandara'] = $this->M_Rute->get_bandara()->result();
+    $data['sts'] = "pesawat";
     $this->load->view('v-rute',$data);
   }
 
-  public function list_rute(){
-    $list = $this->M_Rute->get_datatables();
+  function kereta(){
+    $data['judul'] = "Rute Kereta Api";
+    $data['aktif'] = "";
+    $data['aktiftik'] ="";
+    $data['aktiflap'] = "";
+    $data['transportation'] = $this->M_Rute->gettrans('2')->result();
+    $data['stasiun'] = $this->M_Rute->get_stasiun()->result();
+    $data['sts'] = "kereta";
+    $this->load->view('v-rute',$data);
+  }
+  public function list_rute($w){
+    $list = $this->M_Rute->get_datatables($w);
     $data = array();
     $no = $_POST['start'];
     foreach ($list as $r) {
@@ -24,8 +39,13 @@ class Rute extends CI_Controller{
       $row[] = $no;
       $row[] = $r->depart_at;
       $row[] = $r->estp;
-      $row[] = $this->ubahfrom($r->rute_from);
-      $row[] = $this->ubahto($r->rute_to);
+      if ($w == "1") {
+        $row[] = $this->ubahfromb($r->rute_from);
+        $row[] = $this->ubahtob($r->rute_to);
+      }else{
+        $row[] = $this->ubahfrom($r->rute_from);
+        $row[] = $this->ubahto($r->rute_to);
+      }
       $row[] = $r->price;
       $row[] = $r->description;
 
@@ -45,13 +65,24 @@ class Rute extends CI_Controller{
     echo json_encode($output);
   }
 
-  function registrasi_rute(){
+  function registrasi_rutekereta(){
     $data['judul'] = "Registrasi rute";
     $data['aktif'] = "";
     $data['aktiftik'] ="";
     $data['aktiflap'] = "";
-    $data['transportation'] = $this->M_Rute->gettrans()->result();
+    $data['transportation'] = $this->M_Rute->gettrans('2')->result();
     $data['stasiun'] = $this->M_Rute->get_stasiun()->result();
+    $data['sts'] = "kereta";
+    $this->load->view('v-tambahrute',$data);
+  }
+  function registrasi_rutepesawat(){
+    $data['judul'] = "Registrasi rute";
+    $data['aktif'] = "";
+    $data['aktiftik'] ="";
+    $data['aktiflap'] = "";
+    $data['transportation'] = $this->M_Rute->gettrans('1')->result();
+    $data['bandara'] = $this->M_Rute->get_bandara()->result();
+    $data['sts'] = "pesawat";
     $this->load->view('v-tambahrute',$data);
   }
   function simpan(){
@@ -96,6 +127,22 @@ class Rute extends CI_Controller{
     }
     function ubahto($idto){
       $a = $this->M_Rute->getto($idto)->result();
+
+      foreach ($a as $k) {
+        return $k->nama."(".$k->abbr.") ".$k->city;
+      }
+    }
+
+
+    function ubahfromb($idfrom){
+      $a = $this->M_Rute->getfromb($idfrom)->result();
+
+      foreach ($a as $k) {
+        return $k->nama."(".$k->abbr.") ".$k->city;
+      }
+    }
+    function ubahtob($idto){
+      $a = $this->M_Rute->gettob($idto)->result();
 
       foreach ($a as $k) {
         return $k->nama."(".$k->abbr.") ".$k->city;

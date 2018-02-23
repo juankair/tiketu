@@ -4,6 +4,12 @@
   $this->load->view('layouts/navigation2');
 ?>
 
+<style>
+  .modal-nya {
+  width: 750px;
+  margin: auto;
+}
+</style>
 <div class="m-grid__item m-grid__item--fluid m-wrapper">
           <div class="m-subheader-search">
             <h2 class="m-subheader-search__title">
@@ -16,15 +22,41 @@
               <div class="m-grid m-grid--ver-desktop m-grid--desktop">
                 <div class="m-grid__item m-grid__item--middle">
                   <div class="m-input-icon m-input-icon--fixed m-input-icon--fixed-md m-input-icon--right">
-                    <input name="from" type="text" class="form-control form-control-lg m-input m-input--pill" placeholder="Dari">
-                    <span class="m-input-icon__icon m-input-icon__icon--right">
+                 <select class="select-beast demo-default" name="from">
+                    <option value="">Semua Data</option>
+                    <?php 
+                    $u = 0;
+                      foreach ($dari as $d) {
+                        ?>
+                    <option><?php echo $d ?></option>
+                        <?php
+                        $u++;
+                      }
+                     ?>
+                  </select>
+                     <span class="m-input-icon__icon m-input-icon__icon--right">
                       <span>
                         <i class="la la-calendar-check-o"></i>
                       </span>
                     </span>
                   </div>
+
                   <div class="m-input-icon m-input-icon--fixed m-input-icon--fixed-md m-input-icon--right">
-                    <input type="text" name="to" class="form-control form-control-lg m-input m-input--pill" placeholder="Ke">
+                    <select class="select-beast demo-default" name="to">
+                    <option value="">Semua Data</option>
+                    <?php 
+                    $a = 0;
+                      foreach ($ke as $k) {
+                        ?>
+                    <option><?php echo $k ?></option>
+                        <?php
+                      $a++;
+                      }
+                        function ubahto($txt){
+                          return "test";
+                        }
+                     ?>
+                  </select>
                     <span class="m-input-icon__icon m-input-icon__icon--right">
                       <span>
                         <i class="la la-calendar-check-o"></i>
@@ -52,36 +84,37 @@
                     
                     <table id="tablepesawat" class="table table-hover">
                       <thead>
-                        <tr>
-                          <th style="display:none;">id</th>
-                          <th >Waktu</th>
-                          <th>Dari</th>
-                          <th>Ke</th>
-                          <th>Estimasi</th>
-                          <th>Harga</th>
-                          <th>Nama</th>
-                          <th>Pilih</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php
-
-                  foreach ($getpesawat as $k) {
-                    ?>
-                    <tr style="cursor:pointer" >
-                      <td style="display:none;"><?php echo $k->id ?></td>
-                      <td><?php echo $k->depart_at ?></td>
-                      <td><?php echo $k->rute_from ?></td>
-                      <td><?php echo $k->rute_to ?></td>
-                      <td><?php echo $k->estp ?> Jam</td>
-                      <td><?php echo $k->price ?></td>
-                      <td><?php echo $k->description ?></td>
-                      <td><button class="btn btn-primary btn-pilih">Pilih</button></td>
-                    </tr>
-                    <?php
+                <tr>
+                  <th style="display: none;">ID</th>
+                  <th>Jam Pergi</th>
+                  <th>Jam Sampai</th>
+                  <th>Dari</th>
+                  <th>Ke</th>
+                  <th>Harga</th>
+                  <th>Nama</th>
+                  <th>Pilih</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php 
+                  for ($i=0; $i < count($datana); $i++) { 
+                    foreach ($datajadi as $dj) {
+                      ?>
+                      <tr>
+                        <td style="display: none;"><?php echo $dj[$i][0] ?></td>
+                        <td><?php echo $dj[$i][1] ?></td>
+                        <td><?php echo $dj[$i][6] ?></td>
+                        <td><?php echo $dj[$i][2] ?></td>
+                        <td><?php echo $dj[$i][3] ?></td>
+                        <td><?php echo $dj[$i][4] ?></td>
+                        <td><?php echo $dj[$i][5] ?></td>
+                        <td><?php echo $dj[$i][7] ?></td>
+                      </tr>
+                      <?php
+                    }
                   }
-                   ?>
-                      </tbody>
+                 ?>
+              </tbody>
                     </table>
                     <!-- <div class="m_datatable_pesawat" id="datatablePesawat"></div> -->
                   </div>
@@ -96,12 +129,12 @@
       <!-- end:: Body -->
 
           <!-- Bootstrap modal -->
-          <div class="modal fade" id="modal_conf" role="dialog" tabindex="-1">
+          <div class="modal fade modal-lg modal-nya" id="modal_conf" style="width:1250px;" role="dialog" tabindex="-1">
               <div class="modal-dialog">
                   <div class="modal-content">
                       <div class="modal-header">
                           <h4 class="modal-title">Rangkuman Pilihan</h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-text="true">&times;</span></button>
                       </div>
                       <div class="modal-body">
                         <form action="<?php echo site_url('tiket/order') ?>" method="post">
@@ -120,15 +153,31 @@
                                 </select>
                               </div>
                             </div>
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="control-label mb-2">Bayi < 3thn</label>
+                                  <select class="form-control" id="canak" name="anak">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                  </select>
+                              </div>
+                            </div>
 
                           </div>
-
+  
                           <div class="row">
                             <div class="col-md-6"><h6><span id="rnama"></span></h6><br></div>
+                          
+                            <div class="col-md-6">
+                              <label class="control-label">Tanggal Pemberangkatan</label>
+                              <input name="tglpesan" readonly class="form-control" value="<?php echo date('m/d/Y') ?>" type="text">
+                            </div>
                           </div>
                           <div class="row">
-  Estimasi Perjalanan : &nbsp; <span id="restp"></span>
-</div>
+                            <div class="col-md-6">
+                              Jam Sampai : &nbsp;<span id="restp"></span>
+                            </div>
+                          </div>
                         </div>
 
 <input type="hidden" name="idrute" class="rrute" value="">
@@ -152,54 +201,57 @@
 
 
 
-
-
 <?php $this->load->view('layouts/footer'); ?>
   
 <script type="text/javascript">
+
+   'use strict';
+  var table;
+
   $('#tablepesawat').dataTable({
     searching:true,
     bLengthChange : false
   });
-  $('#tablekereta').dataTable({
-    bLengthChange : false
-  });
-  $('.select2').select2();
-  
+function makedtgreatagain(){
+  $(".dataTables_length select").remove();
+  $('.dataTables_filter input').remove();
+  $('.dataTables_filter label').remove();
+  $('#tablepesawat thead th').css('border-bottom','none');
+  $('#tablepesawat.no-footer').css('border-bottom','none');
 
-$(".dataTables_length select").remove();
-$('.dataTables_filter input').remove();
-$('.dataTables_filter label').remove();
-$('#tablepesawat thead th').css('border-bottom','none');
-$('#tablepesawat.no-footer').css('border-bottom','none');
+}
 
+makedtgreatagain();
 
-    $('[name="from"]').on( 'keyup', function () {
-      $('#tablepesawat').dataTable().fnFilter(this.value,2);
-      $('#tablekereta').dataTable().fnFilter(this.value,2);
-    });
-    $('[name="to"]').on( 'keyup', function () {
+    $('[name="from"]').on( 'change', function () {
       $('#tablepesawat').dataTable().fnFilter(this.value,3);
-      $('#tablekereta').dataTable().fnFilter(this.value,3);
+      $('#tablepesawat').dataTable().fnFilter(this.value,3);
+      makedtgreatagain();
+    });
+    $('[name="to"]').on( 'change', function () {
+      $('#tablepesawat').dataTable().fnFilter(this.value,4);
+      $('#tablepesawat').dataTable().fnFilter(this.value,4);
+      makedtgreatagain();
     });
 
     function resetfilter(){
-      $('#tablepesawat').dataTable().fnFilter('',2);
-      $('#tablekereta').dataTable().fnFilter('',2);
       $('#tablepesawat').dataTable().fnFilter('',3);
-      $('#tablekereta').dataTable().fnFilter('',3);
+      $('#tablepesawat').dataTable().fnFilter('',3);
+      $('#tablepesawat').dataTable().fnFilter('',4);
+      $('#tablepesawat').dataTable().fnFilter('',4);
       $('[name="from"]').val('');
       $('[name="to"]').val('');
     }
+
 
     $(document).on('click','.btn-pilih',function(){
       $('#modal_conf').modal({backdrop: 'static', keyboard: false});
       $('#modal_conf').modal('show');
         var idrute = $(this).closest('tr').find('td:eq(0)').text();
         var waktu = $(this).closest('tr').find('td:eq(1)').text();
-        var dari = $(this).closest('tr').find('td:eq(2)').text();
-        var ke = $(this).closest('tr').find('td:eq(3)').text();
-        var estp = $(this).closest('tr').find('td:eq(4)').text();
+        var estp = $(this).closest('tr').find('td:eq(2)').text();
+        var dari = $(this).closest('tr').find('td:eq(3)').text();
+        var ke = $(this).closest('tr').find('td:eq(4)').text();
         var harga = $(this).closest('tr').find('td:eq(5)').text();
         var nama = $(this).closest('tr').find('td:eq(6)').text();
 
@@ -220,9 +272,21 @@ $('#tablepesawat.no-footer').css('border-bottom','none');
         $('[name="dewasa"]').change(function(){
           var a = $('#cdewasa > option:selected').val();
 
-          $('#rharga').text(harga * a);
+            $('#rharga').text(accounting.formatMoney(harga * a));
+
+            $('#canak').find('option').remove();
+
+            for (var i = 0; i <= this.value; i++) {
+              $('#canak').find('option').end().append('<option>'+i+'</option>');
+            }
 
         });
     });
+
+    $('.select-beast').selectize({
+    sortField: 'text'
+    })
+
+    $('[name="tglpesan"]').datepicker();
 
 </script>

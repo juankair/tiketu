@@ -84,7 +84,7 @@ $this->load->view('layouts/navigation2');
                                                                                 </span>
                                                                             </li>
                                                                             <li class="m-nav__item">
-                                                                                <a href="<?php echo site_url('rute/registrasi_rute') ?>" class="m-nav__link">
+                                                                                <a href="<?php echo site_url('rute/registrasi_rute'.$sts.'') ?>" class="m-nav__link">
                                                                                     <i class="m-nav__link-icon flaticon-share"></i>
                                                                                     <span class="m-nav__link-text">
                                                                                         Tambahkan Data
@@ -174,7 +174,12 @@ $this->load->view('layouts/navigation2');
 
  <script type="text/javascript">
  var table;
-
+var u = "<?php echo $sts ?>";
+if (u == "kereta") {
+    var url = "<?php echo site_url('rute/list_rute/2') ?>";
+}else{
+    var url = "<?php echo site_url('rute/list_rute/1') ?>";
+}
  table = $('#tablelistrute').DataTable({
 
      "processing": true, //Feature control the processing indicator.
@@ -183,7 +188,7 @@ $this->load->view('layouts/navigation2');
 
      // Load data for the table's content from an Ajax source
      "ajax": {
-         "url": "<?php echo site_url('rute/list_rute')?>",
+         "url": url,
          "type": "POST"
      }
 
@@ -320,4 +325,27 @@ $('.dataTables_filter input').addClass('form-control');
     })
 
 $('.bwabwa').select2();
+
+
+$('[name="depart_at"]').blur(function(){
+    if ($('[name="estp"]').val() == '') {
+
+    }else{
+        if (this.value >= $('[name="estp"]').val()) {
+            swal('Peringatan','Waktu Pemberangkatan Tidak Boleh Lebih Atau Sama Dari Waktu Sampai!','warning');
+            $('[name="depart_at"]').val('');
+        }
+    }
+});
+
+$('[name="estp"]').blur(function(){
+    if ($('[name="depart_at"]').val() == '') {
+
+    }else{
+        if (this.value <= $('[name="depart_at"]').val()) {
+            swal('Peringatan','Waktu Sampai Tidak Boleh Kurang Atau Sama Dari Waktu Pemberangkatan!','warning');
+            $('[name="estp"]').val('');
+        }
+    }
+});
  </script>

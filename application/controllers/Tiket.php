@@ -23,13 +23,47 @@ class Tiket extends CI_Controller{
     $data['aktif'] = "";
     $data['aktiflap'] = "";
     $data['aktiftik'] ="m-menu__item--active";
-    $data['getkereta'] = $this->M_Tiket->getkereta()->result();
-    $data['getpesawat'] = $this->M_Tiket->getpesawat()->result();
-    $data['dari'] = $this->M_Tiket->getdari()->result();
-    $data['ke'] = $this->M_Tiket->getke()->result();
+
+    $listpesawat = $this->M_Tiket->getpesawat()->result();
+    
+    $datana = array();
+    foreach ($listpesawat as $r) {
+    $roow = array();
+      $roow[] = $r->id;
+      $roow[] = $r->depart_at;
+      $roow[] = $this->ubahfromb($r->rute_from);
+      $roow[] = $this->ubahtob($r->rute_to);
+      $roow[] = $r->price;
+      $roow[] = $r->description;
+      $roow[] = $r->estp;
+
+      //add html for action
+      $roow[] = '<button class="btn btn-primary btn-pilih">Pilih</button>';
+
+      $datana[] = $roow;
+    }
+    $datajadi[] = $datana;
+      $data['datana'] = $datana;
+      $data['datajadi'] = $datajadi;
+
+    $listf = $this->M_Tiket->getdari()->result();
+    foreach ($listf as $l) {
+      $rowf[] = $this->ubahfromb($l->rute_from);
+    }
+      $data['dari'] = $rowf;
+
+
+    $listt = $this->M_Tiket->getke()->result();
+    foreach ($listt as $l) {
+      $rowt[] = $this->ubahtob($l->rute_to);
+    }
+      $data['ke'] = $rowt;
+
+
     $this->load->view('v-tiketpesawat',$data);
   }
   function order(){
+    $rangkaian = substr($this->input->post('tglpesan'), 6,4) . substr($this->input->post('tglpesan'), 0,2) . substr($this->input->post('tglpesan'), 3,2);
     $data['judul'] = "Beli Tiket";
     $data['aktif'] = "";
     $data['aktiflap'] = "";
@@ -41,8 +75,17 @@ class Tiket extends CI_Controller{
     $data['nama'] = $this->input->post('nama');
     $data['dewasa'] = $this->input->post('dewasa');
     $data['jmltempatduduk'] = $this->M_Tiket->get_jml_seat($this->input->post('nama'))->row();
-    $data['seat_block'] = $this->M_Tiket->get_seat_block(strtoupper("TIK".substr($this->input->post('nama'),0,3).date('Ymd')).$this->input->post('idrute') , $this->input->post('estp'))->result();
+    $data['seat_block'] = $this->M_Tiket->get_seat_block(strtoupper("TIK".substr($this->input->post('nama'),0,3).$rangkaian).$this->input->post('idrute') , $this->input->post('estp'))->result();
+    $data['tglna'] = $rangkaian;
+    $data['tglpks'] = substr($this->input->post('tglpesan'), 6,4) ."-". substr($this->input->post('tglpesan'), 0,2) ."-". substr($this->input->post('tglpesan'), 3,2);
+    //INI BULAN
+    // echo substr($this->input->post('tglpesan'), 0,2);
+    //INI TANGGAL
+    // echo substr($this->input->post('tglpesan'), 3,2);
+    //INI TAHUN
+    // echo substr($this->input->post('tglpesan'), 6,4);
 
+    // echo $rangkaian;
     $this->load->view('v-order',$data);
   }
   function checkout(){
@@ -50,9 +93,8 @@ class Tiket extends CI_Controller{
     $data['aktiflap'] = "";
     $data['aktif'] = "";
     $data['aktiftik'] ="m-menu__item--active";
-    $data['koderes'] = strtoupper("TIK".substr($this->input->post('tnama'),0,3).date('Ymd').$this->input->post('idrute'));
+    $data['koderes'] = strtoupper("TIK".substr($this->input->post('tnama'),0,3).$this->input->post('tanggalnaa').$this->input->post('idrute'));
     
-
     $this->load->view('v-checkout',$data);
   }
   function kereta(){
@@ -60,8 +102,6 @@ class Tiket extends CI_Controller{
     $data['aktif'] = "";
     $data['aktiflap'] = "";
     $data['aktiftik'] ="m-menu__item--active";
-    $data['getkereta'] = 
-    $data['getpesawat'] = $this->M_Tiket->getpesawat()->result();
 
     $listkereta = $this->M_Tiket->getkereta()->result();
     
@@ -109,10 +149,6 @@ class Tiket extends CI_Controller{
       redirect('tiket');
     }
   }
-  function faktur(){
-    $data['judul'] = "Faktur";
-    $this->load->view('v-fakturtiket',$data);
-  }
 
   function ubahfrom($idfrom){
       $a = $this->M_Rute->getfrom($idfrom)->result();
@@ -129,6 +165,29 @@ class Tiket extends CI_Controller{
       }
     }
 
+    function ubahfromb($idfrom){
+      $a = $this->M_Rute->getfromb($idfrom)->result();
+
+      foreach ($a as $k) {
+        return $k->nama."(".$k->abbr.") ".$k->city;
+      }
+    }
+    function ubahtob($idto){
+      $a = $this->M_Rute->gettob($idto)->result();
+
+      foreach ($a as $k) {
+        return $k->nama."(".$k->abbr.") ".$k->city;
+      }
+    }
+
+  function selesai(){
+    $data['judul'] = "Terimakasih";
+    $data['aktif'] = "";
+    $data['aktiflap'] = "";
+    $data['aktiftik'] ="m-menu__item--active";
+
+    $this->load->view('v-terimakasih',$data);
+  }
 }
 
  ?>
